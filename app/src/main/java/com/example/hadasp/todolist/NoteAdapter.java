@@ -16,7 +16,7 @@ import java.util.List;
  * Created by hadasp on 10/12/2017.
  */
 
-public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> implements View.OnClickListener {
+public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
 
     private List<Note> mNoteList;
@@ -60,7 +60,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         holder.accbChecked.setChecked(mNoteList.get(position).getChecked());
 
         holder.mView.setTag(position);
-        holder.mView.setOnClickListener(this);
 
         holder.accbChecked.setEnabled(true);
         holder.etBody.setEnabled(true);
@@ -89,18 +88,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         });
 
     }
-
-
-    @Override
-    public void onClick(View view) {
-        final int position = (int) view.getTag();
-        Note note = mNoteList.get(position);
-        AppCompatCheckBox checkBox = view.findViewById(R.id.accb_checked);
-        EditText editText = view.findViewById(R.id.et_note);
-
-
-        }
-
 
     @Override
     public int getItemCount() {
