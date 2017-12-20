@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
 
     private List<Note> mNoteList;
     private final NotesAdapterInteraction mListener;
+
+    private View.OnClickListener checkboxListener;
 
     public NoteAdapter(NotesAdapterInteraction notesAdapterInteraction, List<Note> noteList) {
         mListener = notesAdapterInteraction;
@@ -59,51 +62,41 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
         holder.mView.setTag(position);
         holder.mView.setOnClickListener(this);
 
-        holder.accbChecked.setEnabled(false);
-        holder.etBody.setEnabled(false);
-
-    }
-
-    @Override
-    public void onClick(View view) {
-
-        final int position = (int) view.getTag();
-        Note note = mNoteList.get(position);
-        AppCompatCheckBox checkBox = view.findViewById(R.id.accb_checked);
-        EditText editText = view.findViewById(R.id.et_note);
-
-        checkBox.setEnabled(true);
-        editText.setEnabled(true);
-
-        checkBox.setOnClickListener(new View.OnClickListener() {
+        holder.accbChecked.setEnabled(true);
+        holder.etBody.setEnabled(true);
+        holder.accbChecked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                if (mNoteList.get(position).getChecked()){
-                    mNoteList.get(position).setChecked(false);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b){
+                    mNoteList.get(holder.getAdapterPosition()).setChecked(true);
                 } else {
-                    mNoteList.get(position).setChecked(true);
+                    mNoteList.get(holder.getAdapterPosition()).setChecked(false);
                 }
-                mListener.onUpdateNote(mNoteList.get(position));
-
+                mListener.onUpdateNote(mNoteList.get(holder.getAdapterPosition()));
             }
         });
-
-        editText.addTextChangedListener(new TextWatcher() {
+        holder.etBody.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
             @Override
             public void afterTextChanged(Editable editable) {
-                Note note = mNoteList.get(position);
+                Note note = mNoteList.get(holder.getAdapterPosition());
                 note.setBody(editable.toString());
                 mListener.onUpdateNote(note);
-
             }
         });
 
+    }
 
+
+    @Override
+    public void onClick(View view) {
+        final int position = (int) view.getTag();
+        Note note = mNoteList.get(position);
+        AppCompatCheckBox checkBox = view.findViewById(R.id.accb_checked);
+        EditText editText = view.findViewById(R.id.et_note);
 
 
         }
